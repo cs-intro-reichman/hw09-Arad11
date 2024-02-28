@@ -41,7 +41,7 @@ public class LanguageModel {
 	public void calculateProbabilities(List probs) {	
 		CharData[] charDataArray = probs.toArray();
         CharData current, last;
-        int probsSize = probs.getSize();
+        double probsSize = probs.getLength();
         CharData first = probs.getFirst();
         first.p = first.count / probsSize;
         first.cp = first.p;

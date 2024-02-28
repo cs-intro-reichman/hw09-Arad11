@@ -10,6 +10,12 @@ public class List {
 
     // The number of elements in this list
     private int size;
+
+    private int length;
+
+    public int getLength() {
+        return length;
+    }
 	
     /** Constructs an empty list. */
     public List() {
@@ -33,6 +39,7 @@ public class List {
         Node newNode = new Node(newChar,first);
         first = newNode;
         size++;
+        length++;
     }
     
     /** GIVE Textual representation of this list. */
@@ -76,6 +83,7 @@ public class List {
             if(current.cp.chr == chr) {
                 current.cp.count++;
                 added = true;
+                length++;
             }
             current = current.next;
         }
