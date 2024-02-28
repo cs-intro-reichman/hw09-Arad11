@@ -32,18 +32,20 @@ public class List {
         CharData newChar = new CharData(chr);
         Node newNode = new Node(newChar,first);
         first = newNode;
+        size++;
     }
     
     /** GIVE Textual representation of this list. */
     public String toString() {
-        String strToPrint = "";
+        String strToPrint = "(";
         Node current = first;   
         while (current != null) {
-            strToPrint = current.toString() + " ";
+            strToPrint += current.toString() + " ";
             current = current.next;
         }
 
-        strToPrint = strToPrint.substring(0, strToPrint.length() - 2);
+        strToPrint = strToPrint.substring(0, strToPrint.length() - 1);
+        strToPrint += ")";
         return strToPrint;
     }
 
@@ -75,12 +77,12 @@ public class List {
                 current.cp.count++;
                 added = true;
             }
+            current = current.next;
         }
 
         if(!added) {
             addFirst(chr);
         }
-        
     }
 
     /** GIVE If the given character exists in one of the CharData objects
@@ -112,20 +114,16 @@ public class List {
      *  If the index is negative or is greater than the size of this list, 
      *  throws an IndexOutOfBoundsException. */
     public CharData get(int index) {
-        try {
-            Node current = first;
-            for( int i = 0; i < index; i++) {
-                current = current.next;
-            }
+        if(index < 0 || index > size) { 
+            throw new IndexOutOfBoundsException();
+        } 
 
-            return current.cp;
-        } catch (IndexOutOfBoundsException) {
-            
+        Node current = first;
+        for( int i = 0; i < index; i++) {
+            current = current.next;
         }
-        
-        // if(index > size || index < 0) {
-            
-        // }
+
+        return current.cp;
     }
 
     /** Returns an array of CharData objects, containing all the CharData objects in this list. */
@@ -155,3 +153,4 @@ public class List {
 	    return new ListIterator(current);
     }
 }
+
