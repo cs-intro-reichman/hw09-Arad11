@@ -33,8 +33,43 @@ public class LanguageModel {
 
     /** Builds a language model from the text in the given file (the corpus). */
 	public void train(String fileName) {
-		// Your code goes here
-	}
+        char c;
+        In in = new In(fileName);
+        String window = setWindowString(in);
+
+        while (!in.isEmpty()) {
+            // Gets the next character
+            c = in.readChar();
+    
+            List probs = CharDataMap.get(window);
+            // Checks if the window is already in the map
+            if (probs == null) {
+            // Creates a new empty list, and adds (window,list) to the map
+            probs = new List();
+            CharDataMap.put(window, probs);
+            }
+    
+            // Calculates the counts of the current character.
+            probs.update(c);
+            // Advances the window: adds c to the window’s end, and deletes the
+            // window's first character.
+            window = window.substring(1) + c;
+        }
+        
+        for (List probs : CharDataMap.values()) {
+            calculateProbabilities(probs);
+        }
+
+    }
+
+    private String setWindowString(In in) {
+        String windowStr = "";
+        for(int i = 0; i < windowLength; i++) {
+            windowStr += in.readChar();
+        }
+
+        return windowStr;
+    }
 
     // Computes and sets the probabilities (p and cp fields) of all the
 	// characters in the given list. */
@@ -75,18 +110,28 @@ public class LanguageModel {
 	 * @return the generated text
 	 */
 	public String generate(String initialText, int textLength) {
-		String substr = initialText.substring(initialText.length() - 1 - textLength, initialText.length() - 1);
-        boolean isSubStrExist = CharDataMap.keySet().contains(substr);
-        if (!isSubStrExist) {
-            return initialText;
-        } else {
-            String newStr = initialText + " ";
-            List charList = CharDataMap.get(substr);
-            for(int i = 0; i < textLength; i++) {
-                newStr += getRandomChar(charList);
+        if (initialText.length() <= windowLength) {
+            String newWindow = initialText.substring(initialText.length()-windowLength,initialText.length());
+            int i =initialText.length();
+
+            while (initialText.length() != textLength+windowLength) {
+                if (!CharDataMap.containsKey(newWindow)) {
+                    break;
+                }
+
+                List probs = CharDataMap.get(newWindow);
+                char nextChar = getRandomChar(probs);
+                initialText += nextChar;
+                newWindow = newWindow.substring(1) + nextChar;
+                i++;
             }
-            return newStr;
+
+            if (i== textLength) { 
+                return initialText;
+           }
         }
+
+        return initialText;
 	}
 
     /** Returns a string representing the map of this language model. */
