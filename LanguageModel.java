@@ -93,7 +93,7 @@ public class LanguageModel {
 	public char getRandomChar(List probs) {
 		double r = randomGenerator.nextDouble();;
         CharData[] probsArray = probs.toArray();
-        for(int i = 0; i < probsArray.length; i++) {
+        for(int i = 0; i < probs.getSize(); i++) {
             if(probsArray[i].cp > r ) {
                 return probsArray[i].chr;
             }
