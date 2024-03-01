@@ -22,7 +22,7 @@ public class LanguageModelTester {
             case "all":
                 result = testCalculateProbabilities();
                 result = result && testGetRandomChar();
-                result = result && testTrain();
+            result   = result && testTrain();
                 result = result && testGenerate();
                 break;
             default:
